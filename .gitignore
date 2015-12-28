@@ -1,0 +1,32 @@
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+*.class
+*.log
+*.pxm
+
+# sbt specific
+dist/*
+target/
+# Note that this deliberately has a trailing / (to match only directories) 
+# and it deliberately has no leading / (to match project/target/ in addition to plain target/).
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Scala-IDE specific
+.scala_dependencies
+
+#jMonkey-Kram
+liblwjgl.jnilib
+openal.dylib
+liblwjgl64.so
+libopenal64.so
+
+
