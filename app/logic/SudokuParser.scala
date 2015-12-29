@@ -65,6 +65,18 @@ case class Sudoku(cells: Array[Cell]) {
       .map(apply)
       .filter(c => c != coordinate && (c.coordinate.row == row || c.coordinate.column == column || c.coordinate.box == box) )
   }
+
+  def getCellsOfBox(boxIndex: Int): Array[Cell] = {
+    cells.filter(_.coordinate.box == boxIndex)
+  }
+
+  def getCellsOfRow(rowIndex: Int): Array[Cell] = {
+    cells.filter(_.coordinate.row == rowIndex)
+  }
+
+  def getCellsOfColumn(columnIndex: Int): Array[Cell] = {
+    cells.filter(_.coordinate.column == columnIndex)
+  }
 }
 
 object SudokuParser {

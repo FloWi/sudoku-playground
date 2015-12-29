@@ -1,0 +1,73 @@
+@import logic.{CandidateList, Cell, Sudoku}
+@(sudoku: Sudoku)
+
+
+@candidateList(candidateList: CandidateList) = {
+    <table id="cl_r0c1" class="candtb" cellspacing="0" align="center">
+        <tbody>
+        @for( row <- 0.to(2)) {
+            <tr>
+            @for( col <- 0.to(2)) {
+                @defining(row * 3 + col + 1) { number =>
+                    <td id="r0c1ca0"> @if(candidateList.candidates.contains(number.toByte)) {
+                        @number
+                    } else {
+                            &nbsp;
+                    } </td>
+                }
+            }
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@cell(cell: Cell) = {
+@cell match {
+    case logic.SolvedCell(value, coordinate) => {
+        <td class="InnerT" id="r0c0" style="font-size: 16pt ; color: rgb(187, 0, 0) ; background-color: rgb(221, 238, 255) ;">@value</td>
+    }
+    case logic.UnsolvedCell(coordinate) => {
+        <td class="InnerT" id="r0c0" style="font-size: 8pt ; color: black ; background-color: rgb(221, 238, 255) ;">
+        @sudoku.calcCandidates(coordinate).map(candidateList)
+        </td>
+    }
+}
+}
+
+@box(sudoku: Sudoku, boxIndex: Int) = {
+    <td class="OuterT"> @*outer Box*@
+        <table class="boardbox" id="box0">
+            <tbody>
+            @sudoku.getCellsOfBox(boxIndex).toVector.groupBy(c => c.coordinate.row).toList.sortBy(_._1).map {
+                case (row, cells) => {
+                    <tr> @cells.map { c => @cell(c) } </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </td>
+}
+
+@boxRow(sudoku: Sudoku, boxRowIndex: Int) = {
+    <tr> @*Box-row*@
+        @for( boxIndex <- 0.to(2)) {
+            @box(sudoku, boxRowIndex * 3 + boxIndex)
+        }
+    </tr>
+}
+
+@main("Welcome to Play") {
+    <div id="myCanvas" style="position: relative; width: 420px" >
+        <table class="bigboard" border="0" cellpadding="0" cellspacing="0">
+
+            <tbody>
+            @for( boxRowIndex <- 0.to(2)) {
+                @boxRow(sudoku, boxRowIndex)
+            }
+            </tbody>
+        </table>
+    </div>
+
+}
+
