@@ -1,5 +1,6 @@
-package logic
+package de.flwi.sudoku.logic
 
+import de.flwi.sudoku.model.logic._
 import org.specs2.matcher.MatchResult
 import org.specs2.mutable._
 

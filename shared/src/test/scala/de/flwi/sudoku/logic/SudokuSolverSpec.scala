@@ -1,4 +1,4 @@
-package logic
+package de.flwi.sudoku.logic
 
 import org.specs2.matcher.{Matcher, MatchResult}
 import org.specs2.mutable._

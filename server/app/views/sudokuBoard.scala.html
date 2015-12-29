@@ -1,4 +1,4 @@
-@import logic.{CandidateList, Cell, Sudoku}
+@import de.flwi.sudoku.model.logic._
 @(sudoku: Sudoku)
 
 
@@ -24,10 +24,10 @@
 
 @cell(cell: Cell) = {
 @cell match {
-    case logic.SolvedCell(value, coordinate) => {
+    case SolvedCell(value, coordinate) => {
         <td class="InnerT" id="r0c0" style="font-size: 16pt ; color: rgb(187, 0, 0) ; background-color: rgb(221, 238, 255) ;">@value</td>
     }
-    case logic.UnsolvedCell(coordinate) => {
+    case UnsolvedCell(coordinate) => {
         <td class="InnerT" id="r0c0" style="font-size: 8pt ; color: black ; background-color: rgb(221, 238, 255) ;">
         @sudoku.calcCandidates(coordinate).map(candidateList)
         </td>

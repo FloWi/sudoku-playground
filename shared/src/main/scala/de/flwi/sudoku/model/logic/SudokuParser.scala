@@ -1,4 +1,4 @@
-package logic
+package de.flwi.sudoku.model.logic
 
 object Coordinate {
   def apply(row: Byte, column: Byte): Coordinate = {

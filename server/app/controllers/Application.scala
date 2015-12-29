@@ -1,9 +1,7 @@
 package controllers
 
-import logic.{Sudoku, SudokuParser}
-import play.api._
+import de.flwi.sudoku.model.logic.SudokuParser
 import play.api.mvc._
-import play.api.mvc.Results._
 
 object Application extends Controller {
 
