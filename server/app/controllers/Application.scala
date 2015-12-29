@@ -2,6 +2,7 @@ package controllers
 
 import de.flwi.sudoku.model.logic.SudokuParser
 import play.api.mvc._
+import play.api._
 
 object Application extends Controller {
 
