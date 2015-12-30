@@ -39,7 +39,7 @@
     <td class="OuterT"> @*outer Box*@
         <table class="boardbox" id="box0">
             <tbody>
-            @sudoku.getCellsOfBox(boxIndex).toVector.groupBy(c => c.coordinate.row).toList.sortBy(_._1).map {
+            @sudoku.getCellsOf(Box(boxIndex.toByte)).toVector.groupBy(c => c.coordinate.row).toList.sortBy(_._1).map {
                 case (row, cells) => {
                     <tr> @cells.map { c => @cell(c) } </tr>
                 }

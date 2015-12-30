@@ -12,8 +12,7 @@ lazy val server = (project in file("server")).settings(
   resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",
   libraryDependencies ++= Seq(
     filters,
-    jdbc,
-    evolutions,
+    specs2 % Test,
     "com.typesafe.play" %% "anorm" % "2.5.0",
     "com.vmunier" %% "play-scalajs-scripts" % "0.3.0",
     "com.typesafe.slick" %% "slick" % "3.0.2",

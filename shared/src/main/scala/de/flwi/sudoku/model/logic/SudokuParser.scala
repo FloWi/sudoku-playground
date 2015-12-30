@@ -14,6 +14,8 @@ object Coordinate {
   }
 }
 
+case class BoxCoordinate(row: Byte, column: Byte)
+
 case class Coordinate(row: Byte, column: Byte, box: Byte) {
   override def toString: String = s"r$row|c$column|b$box"
 }
@@ -27,6 +29,28 @@ case class SolvedCell(value: Byte, coordinate: Coordinate) extends Cell
 case class UnsolvedCell(coordinate: Coordinate) extends Cell
 
 case class CandidateList(coordinate: Coordinate, candidates: Set[Byte])
+
+sealed trait CellCollection {
+  def index: Byte
+  def coordinates: Set[Coordinate]
+
+  def cells(sudoku: Sudoku): IndexedSeq[Cell] = {
+    sudoku.cells.filter(c => coordinates.contains(c.coordinate))
+  }
+}
+
+case class Row(index: Byte) extends CellCollection {
+  override def coordinates: Set[Coordinate] = 0.to(8).map(col => Coordinate(index, col.toByte)).toSet
+}
+
+case class Column(index: Byte) extends CellCollection {
+  override def coordinates: Set[Coordinate] = 0.to(8).map(row => Coordinate(row.toByte, index)).toSet
+}
+
+case class Box(index: Byte) extends CellCollection {
+  def boxCoordinate = BoxCoordinate((index / 3).toByte, (index % 3).toByte)
+  override def coordinates: Set[Coordinate] = 0.to(80).map(cellIndex => Coordinate(cellIndex.toByte)).toSet.filter(_.box == index)
+}
 
 case class Sudoku(cells: Array[Cell]) {
 
@@ -66,16 +90,18 @@ case class Sudoku(cells: Array[Cell]) {
       .filter(c => c != coordinate && (c.coordinate.row == row || c.coordinate.column == column || c.coordinate.box == box) )
   }
 
-  def getCellsOfBox(boxIndex: Int): Array[Cell] = {
-    cells.filter(_.coordinate.box == boxIndex)
+  def getCellsOf(cellCollection: CellCollection): IndexedSeq[Cell] = {
+    cells.filter(c => cellCollection.coordinates.contains(c.coordinate))
   }
 
-  def getCellsOfRow(rowIndex: Int): Array[Cell] = {
-    cells.filter(_.coordinate.row == rowIndex)
+  def boxes: IndexedSeq[Box] = {
+    0.to(8).map(_.toByte).map(Box)
   }
-
-  def getCellsOfColumn(columnIndex: Int): Array[Cell] = {
-    cells.filter(_.coordinate.column == columnIndex)
+  def rows: IndexedSeq[Row] = {
+    0.to(8).map(_.toByte).map(Row)
+  }
+  def columns: IndexedSeq[Column] = {
+    0.to(8).map(_.toByte).map(Column)
   }
 }
 
