@@ -1,7 +1,11 @@
 package de.flwi.sudoku
 
 import de.flwi.sudoku.model.logic.{SudokuParser, Sudoku}
-import org.scalajs.jquery.jQuery
+import japgolly.scalajs.react._
+import japgolly.scalajs.react.vdom.prefix_<^._
+import org.scalajs.dom
+import org.scalajs.dom.raw.Node
+import org.scalajs.jquery.{JQuery, jQuery}
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
@@ -25,7 +29,7 @@ object ExampleJS {
 
 
 
-object SudokuJS extends js.JSApp {
+object SudokuJSApp extends js.JSApp {
 
   def main(): Unit = {
 
@@ -41,10 +45,22 @@ object SudokuJS extends js.JSApp {
 
   def render(sudoku: Sudoku, sudokuString: String) = {
 
-    val content: String = h3(s"Render of sudoku: $sudokuString").render
-    jQuery("#sudoku-content").append(content)
+    type State = Vector[String]
+
+    class Backend($: BackendScope[Unit, State]) {
+      def render(s: State) =   // ← Accept props, state and/or propsChildren as argument
+        <.div(
+          <.div(s.length, " items found:"),
+          <.ol(s.map(i => <.li(i))))
+    }
+
+    val Example = ReactComponentB[Unit]("Example")
+      .initialState(Vector("hello", "world"))
+      .renderBackend[Backend]  // ← Use Backend class and backend.render
+      .buildU
 
 
-
+    val mountNode: Node = dom.document.getElementById("sudoku-content")
+    val mounted = ReactDOM.render(Example(), mountNode)
   }
 }

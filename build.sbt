@@ -37,8 +37,21 @@ lazy val client = (project in file("client")).settings(
     "com.lihaoyi" %%% "scalarx" % "0.2.8",
     "be.doeraene" %%% "scalajs-jquery" % "0.8.0",
     "com.lihaoyi" %%% "upickle" % "0.3.4",
-    "com.lihaoyi" %%% "scalatags" % "0.5.3"
-  )
+    "com.lihaoyi" %%% "scalatags" % "0.5.3",
+    "com.github.japgolly.scalajs-react" %%% "core" % "0.10.3"
+  ),
+  jsDependencies ++= Seq(
+    "org.webjars.bower" % "react" % "0.14.3"
+      /        "react-with-addons.js"
+      minified "react-with-addons.min.js"
+      commonJSName "React",
+
+    "org.webjars.bower" % "react" % "0.14.3"
+      /         "react-dom.js"
+      minified  "react-dom.min.js"
+      dependsOn "react-with-addons.js"
+      commonJSName "ReactDOM")
+
 ).enablePlugins(ScalaJSPlugin, ScalaJSPlay).
   dependsOn(sharedJs)
 
