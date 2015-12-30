@@ -1,5 +1,5 @@
 @import de.flwi.sudoku.model.logic._
-@(sudoku: Sudoku)
+@(sudoku: Sudoku)(implicit request: RequestHeader)
 
 
 @candidateList(candidateList: CandidateList) = {
@@ -57,7 +57,7 @@
     </tr>
 }
 
-@main("Welcome to Play") {
+@content = {
     <div id="myCanvas" style="position: relative; width: 420px" >
         <table class="bigboard" border="0" cellpadding="0" cellspacing="0">
 
@@ -68,6 +68,9 @@
             </tbody>
         </table>
     </div>
+}
+
+@templates.main("Awesome sudoku-board rendered by play!", content = content) {
 
 }
 

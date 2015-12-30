@@ -1,0 +1,12 @@
+@(sudokuString: String)(implicit request: RequestHeader)
+
+@content = {
+
+    <div id="sudoku-content" ></div>
+}
+
+@templates.main("Awesome sudoku-board rendered by scalaJS using scalatags!", content = content){
+    <script>
+            de.flwi.sudoku.SudokuJS().renderSudoku("@sudokuString")
+    </script>
+}
