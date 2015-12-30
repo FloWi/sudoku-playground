@@ -2,13 +2,16 @@ package de.flwi.sudoku
 
 import de.flwi.sudoku.model.logic._
 import japgolly.scalajs.react._
+import japgolly.scalajs.react.vdom.Attrs
+import japgolly.scalajs.react.vdom.all.svg._
 import japgolly.scalajs.react.vdom.prefix_<^._
 import org.scalajs.dom
 import org.scalajs.dom.raw.Node
 import org.scalajs.jquery.{JQuery, jQuery}
 
+import scala.collection.immutable.IndexedSeq
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g}
+import scala.scalajs.js.Dynamic.{global => glo}
 import scala.scalajs.js.annotation.JSExport
 
 import scalatags.Text.all._
@@ -47,7 +50,7 @@ object SudokuJSApp extends js.JSApp {
 
   def render(sudoku: Sudoku, sudokuString: String) = {
 
-    val sudokuRender = <.table(^.`class`:="table table-bordered",
+    val sudokuRender = <.table(^.`class` := "sudoku",
       <.tbody(
         renderBoxRows(sudoku)
       )
@@ -56,8 +59,16 @@ object SudokuJSApp extends js.JSApp {
     ReactDOM.render(timerComponent(), mountNode.appendChild(dom.document.createElement("div")))
 
     ReactDOM.render(headerRender(sudokuString), mountNode.appendChild(dom.document.createElement("div")))
-    ReactDOM.render(sudokuRender, mountNode.appendChild(dom.document.createElement("div")))
+
+    val jsDomExample = new SudokuSvg(scalatags.JsDom)
+    mountNode.appendChild(jsDomExample.svgFrag.render)
+
+    //ReactDOM.render(sudokuRender, mountNode.appendChild(dom.document.createElement("div")))
+
+    val cell: Unit = renderUnsolvedCell(CandidateList(Coordinate(0), candidates = 1.to(9).map(_.toByte).toSet))
+    ReactDOM.render(cell, mountNode.appendChild(dom.document.createElement("div")))
   }
+
 
   def headerRender(sudokuString: String) = {
     <.h3(s"Render of sudoku: $sudokuString").render
@@ -76,9 +87,9 @@ object SudokuJSApp extends js.JSApp {
   }
 
   def renderBox(box: Box, sudoku: Sudoku) = {
-    <.table(^.`class`:="table table-bordered",
+    <.table(
       <.tbody(
-        sudoku.getCellsOf(box).groupBy(_.coordinate.row).toIndexedSeq.sortBy(_._1).map { case(rowIndex, cells) =>
+        sudoku.getCellsOf(box).groupBy(_.coordinate.row).toIndexedSeq.sortBy(_._1).map { case (rowIndex, cells) =>
           <.tr(
             cells.sortBy(_.coordinate.column).map(cell => renderCell(cell, sudoku))
           )
@@ -93,7 +104,7 @@ object SudokuJSApp extends js.JSApp {
       case UnsolvedCell(coordinate) =>
         <.td(
           sudoku.calcCandidates(coordinate)
-          .map(_.candidates)
+            .map(_.candidates)
             .getOrElse(Set.empty)
             .toList
             .sorted
@@ -134,23 +145,50 @@ object SudokuJSApp extends js.JSApp {
     Timer()
 
   }
-  def sample() = {
 
-    type State = Vector[String]
-
-    class Backend($: BackendScope[Unit, State]) {
-      def render(s: State) =   // ← Accept props, state and/or propsChildren as argument
-        <.div(
-          <.div(s.length, " items found:"),
-          <.ol(s.map(i => <.li(i))))
-    }
-
-    val Example = ReactComponentB[Unit]("Example")
-      .initialState(Vector("hello", "world"))
-      .renderBackend[Backend]  // ← Use Backend class and backend.render
-      .buildU
-
-    Example()
-
-  }
+//  def renderUnsolvedCell(candidateList: CandidateList) = {
+//
+//    case class UnsolvedCellState(candidateList: CandidateList, highlightedCandidate: Option[Byte])
+//    case class CandidateDetails(candidateValue: Byte, x: Int, y: Int, row: Int, column: Int)
+//
+//    val UnsolvedCell = ReactComponentB[Unit]("UnsolvedCell")
+//      .initialState(UnsolvedCellState(candidateList, None))
+//      .render_S( state => {
+//        val candidateDetails = for (row <- 0 to 2;
+//                                     column <- 0 to 2;
+//                                     candidateValue = (row * 3 + column + 1).toByte;
+//                                     x = column * 20;
+//                                     y = row * 20
+//                                     if state.candidateList.candidates.contains(candidateValue)
+//        ) yield text(
+//          fill := "black",
+//          candidateValue.toString
+//        )
+//
+//        g(candidateDetails)
+//      }).build
+//
+//    UnsolvedCell()
+//  }
 }
+class SudokuSvg[Builder, Output <: FragT, FragT]
+(val bundle: scalatags.generic.Bundle[Builder, Output, FragT]) {
+
+  val svgFrag = {
+    import bundle.implicits._
+    import bundle.svgTags._
+    import bundle.svgAttrs._
+
+    svg(height := "800", width := "500")(
+      polyline(
+        points := "20,20 40,25 60,40 80,120 120,140 200,180",
+        fill := "none",
+        stroke := "black",
+        strokeWidth := "3"
+      )
+    )
+  }
+
+
+}
+

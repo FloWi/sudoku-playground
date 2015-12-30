@@ -3,6 +3,39 @@
 .smallstyleW { font-family: verdana, sans-serif; font-size: 8pt; color:#000000; }
 .smallstyleAN { font-family: "arial narrow", sans-serif; font-size: 9pt; }
 
+
+table.sudoku {
+    table-layout: fixed;
+    width:420px;
+    height:420px;
+}
+
+table.box {
+
+}
+
+table.cell-candidates
+{
+    border-spacing:0;
+    empty-cells:show;
+    border-collapse:separate;
+    table-layout: fixed;
+    width:36px;
+    height:36px;
+}
+
+table.cell-candidates td
+{
+    text-align:center;
+    padding:0 0 0 0;
+    color: #000001;
+    font-size:8pt;
+    font-family: verdana, sans-serif;
+    width:12px;
+    height:11px;
+}
+
+
 textarea {
     font-family: "courier new", verdana, arial, sans-serif;
     font-size: 8pt;
